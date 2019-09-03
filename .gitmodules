@@ -1,9 +1,9 @@
-[submodule "content/themes/Portfolio-Theme"]
-	path = content/themes/Portfolio-Theme
-	url = https://github.com/Moro-Code/Portfolio-Theme.git
 [submodule "core/client"]
 	path = core/client
 	url = https://github.com/Moro-Code/Portfolio-Admin.git
 [submodule "content/themes/casper"]
 	path = content/themes/casper
 	url = https://github.com/TryGhost/Casper.git
+[submodule "content/themes/Portfolio-Theme"]
+	path = content/themes/Portfolio-Theme
+	url = https://github.com/Moro-Code/Portfolio-Theme.git
