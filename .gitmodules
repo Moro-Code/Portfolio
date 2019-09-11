@@ -7,3 +7,6 @@
 [submodule "content/themes/Portfolio-Theme"]
 	path = content/themes/Portfolio-Theme
 	url = https://github.com/Moro-Code/Portfolio-Theme.git
+[submodule "content/themes/TheShell"]
+	path = content/themes/TheShell
+	url = https://github.com/Moro-Code/The-Shell.git
