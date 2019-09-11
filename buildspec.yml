@@ -9,7 +9,7 @@ phases:
       - git init
       - git remote add origin https://github.com/Moro-Code/Portfolio.git
       - git fetch
-      - git checkout -f stable
+      - git checkout -f Portfolio-Master
       - git submodule init
       - git submodule update --recursive
       - echo $(ls ./core/client)
