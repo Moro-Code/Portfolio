@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  pre_build:
+    commands:
+      - git init
+      - git remote add origin https://github.com/Moro-Code/Portfolio.git
+      - git fetch
+      - git checkout -f stable
+      - git submodule init
+      - git submodule update --recursive
+      - echo $(ls ./core/client)
+      - aws s3 cp s3://ghost-secrets/config.production.json config.production.json 
+      - yarn global add knex-migrator grunt-cli ember-cli bower
+  build:
+    commands:
+      - "yarn setup"
+      - "yarn add ghost-storage-adapter-s3"
+      - "mkdir -p ./content/adapters/storage"
+      - "cp -r ./node_modules/ghost-storage-adapter-s3 ./content/adapters/storage/s3"
+      - "grunt prod"
+artifacts:
+  files:
+    - '**/*'
+
+
+  
