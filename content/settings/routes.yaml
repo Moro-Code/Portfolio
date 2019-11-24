@@ -1,9 +1,11 @@
 routes:
+  /: home
 
 collections:
-  /:
-    permalink: /{slug}/
-    template: index
+  /blog/:
+    permalink: /blog/{slug}/
+    template: blog
+    filter: tag:hash-blog
 
 taxonomies:
   tag: /tag/{slug}/
