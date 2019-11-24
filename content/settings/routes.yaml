@@ -5,13 +5,7 @@ collections:
   /blog/:
     permalink: /blog/{slug}/
     template: blog
-    filter: primary_tag:blog
-    data: tag.blog
-  /portfolio/:
-    permalink: /portfolio/{slug}/
-    template: portfolio
-    filter: primary_tag:portfolio
-    data: tag.portfolio
+    filter: tag:hash-blog
 
 taxonomies:
   tag: /tag/{slug}/
