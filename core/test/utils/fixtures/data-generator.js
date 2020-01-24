@@ -74,14 +74,14 @@ DataGenerator.Content = {
             title: 'This is a static page',
             slug: 'static-page-test',
             mobiledoc: DataGenerator.markdownToMobiledoc('<h1>Static page test is what this is for.</h1><p>Hopefully you don\'t find it a bore.</p>'),
-            page: true
+            type: 'page'
         },
         {
             id: ObjectId.generate(),
             title: 'This is a draft static page',
             slug: 'static-page-draft',
             mobiledoc: DataGenerator.markdownToMobiledoc('<h1>Static page test is what this is for.</h1><p>Hopefully you don\'t find it a bore.</p>'),
-            page: true,
+            type: 'page',
             status: 'draft'
         },
         {
@@ -361,6 +361,18 @@ DataGenerator.Content = {
         }
     ],
 
+    members: [
+        {
+            id: ObjectId.generate(),
+            email: 'member1@test.com',
+            name: 'Mr Egg'
+        },
+        {
+            id: ObjectId.generate(),
+            email: 'member2@test.com'
+        }
+    ],
+
     webhooks: [
         {
             id: ObjectId.generate(),
@@ -406,6 +418,31 @@ DataGenerator.Content = {
             type: 'admin',
             integration_id: undefined // "internal"
         }
+    ],
+
+    emails: [
+        {
+            id: ObjectId.generate(),
+            uuid: '6b6afda6-4b5e-4893-bff6-f16859e8349a',
+            status: 'submitted',
+            email_count: 2,
+            subject: 'You got mailed!',
+            html: '<p>Look! I\'m an email</p>',
+            plaintext: 'Waba-daba-dab-da',
+            submitted_at: moment().toDate()
+        },
+        {
+            id: ObjectId.generate(),
+            uuid: '365daa11-4bf0-4614-ad43-6346387ffa00',
+            status: 'failed',
+            error: 'Everything went south',
+            stats: '',
+            email_count: 3,
+            subject: 'You got mailed! Again!',
+            html: '<p>What\'s that? Another email!</p>',
+            plaintext: 'yes this is an email',
+            submitted_at: moment().toDate()
+        }
     ]
 };
 
@@ -413,6 +450,8 @@ DataGenerator.Content = {
 DataGenerator.Content.subscribers[0].post_id = DataGenerator.Content.posts[0].id;
 DataGenerator.Content.api_keys[0].integration_id = DataGenerator.Content.integrations[0].id;
 DataGenerator.Content.api_keys[1].integration_id = DataGenerator.Content.integrations[0].id;
+DataGenerator.Content.emails[0].post_id = DataGenerator.Content.posts[0].id;
+DataGenerator.Content.emails[1].post_id = DataGenerator.Content.posts[1].id;
 
 DataGenerator.forKnex = (function () {
     function createBasic(overrides) {
@@ -468,7 +507,7 @@ DataGenerator.forKnex = (function () {
             status: 'published',
             feature_image: null,
             featured: false,
-            page: false,
+            type: 'post',
             slug: 'slug',
             author_id: DataGenerator.Content.users[0].id,
             updated_at: new Date(),
@@ -614,6 +653,15 @@ DataGenerator.forKnex = (function () {
         });
     }
 
+    function createMember(overrides) {
+        const newObj = _.cloneDeep(overrides);
+
+        return _.defaults(newObj, {
+            id: ObjectId.generate(),
+            email: 'member@ghost.org'
+        });
+    }
+
     function createSetting(overrides) {
         const newObj = _.cloneDeep(overrides);
 
@@ -636,7 +684,6 @@ DataGenerator.forKnex = (function () {
         return _.defaults(newObj, {
             id: ObjectId.generate(),
             token: uuid.v4(),
-            client_id: clients[0].id,
             expires: Date.now() + constants.ONE_DAY_MS
         });
     }
@@ -653,16 +700,6 @@ DataGenerator.forKnex = (function () {
             created_by: DataGenerator.Content.users[0].id,
             created_at: new Date(),
             status: 'sent'
-        });
-    }
-
-    function createTrustedDomain(overrides) {
-        var newObj = _.cloneDeep(overrides);
-
-        return _.defaults(newObj, {
-            id: ObjectId.generate(),
-            client_id: clients[0].id,
-            trusted_domain: 'https://example.com'
         });
     }
 
@@ -728,13 +765,6 @@ DataGenerator.forKnex = (function () {
         createUser(DataGenerator.Content.users[2]),
         createUser(DataGenerator.Content.users[3]),
         createUser(DataGenerator.Content.users[7])
-    ];
-
-    const clients = [
-        createClient({name: 'Ghost Admin', slug: 'ghost-admin', type: 'ua'}),
-        createClient({name: 'Ghost Scheduler', slug: 'ghost-scheduler', type: 'web'}),
-        createClient({name: 'Ghost Auth', slug: 'ghost-auth', type: 'web'}),
-        createClient({name: 'Ghost Backup', slug: 'ghost-backup', type: 'web'})
     ];
 
     const roles_users = [
@@ -901,6 +931,11 @@ DataGenerator.forKnex = (function () {
         createBasic(DataGenerator.Content.api_keys[2])
     ];
 
+    const emails = [
+        createBasic(DataGenerator.Content.emails[0]),
+        createBasic(DataGenerator.Content.emails[1])
+    ];
+
     return {
         createPost: createPost,
         createGenericPost: createGenericPost,
@@ -920,8 +955,8 @@ DataGenerator.forKnex = (function () {
         createAppSetting: createAppSetting,
         createToken: createToken,
         createSubscriber: createSubscriber,
+        createMember: createMember,
         createInvite: createInvite,
-        createTrustedDomain: createTrustedDomain,
         createWebhook: createWebhook,
         createIntegration: createIntegration,
 
@@ -935,10 +970,10 @@ DataGenerator.forKnex = (function () {
         roles: roles,
         users: users,
         roles_users: roles_users,
-        clients: clients,
         webhooks: webhooks,
         integrations: integrations,
-        api_keys: api_keys
+        api_keys: api_keys,
+        emails: emails
     };
 }());
 

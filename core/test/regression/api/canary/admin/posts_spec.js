@@ -20,7 +20,7 @@ describe('Posts API', function () {
                 request = supertest.agent(config.get('url'));
             })
             .then(function () {
-                return localUtils.doAuth(request, 'users:extra', 'posts');
+                return localUtils.doAuth(request, 'users:extra', 'posts', 'emails');
             })
             .then(function (cookie) {
                 ownerCookie = cookie;
@@ -60,7 +60,7 @@ describe('Posts API', function () {
         });
 
         it('combined fields, formats, include and non existing', function (done) {
-            request.get(localUtils.API.getApiQuery('posts/?formats=mobiledoc,html,plaintext&fields=id,title,primary_tag,doesnotexist&include=authors,tags'))
+            request.get(localUtils.API.getApiQuery('posts/?formats=mobiledoc,html,plaintext&fields=id,title,primary_tag,doesnotexist&include=authors,tags,email'))
                 .set('Origin', config.get('url'))
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -81,7 +81,7 @@ describe('Posts API', function () {
                         'post',
                         null,
                         null,
-                        ['mobiledoc', 'plaintext', 'id', 'title', 'html', 'authors', 'tags', 'primary_tag']
+                        ['mobiledoc', 'plaintext', 'id', 'title', 'html', 'authors', 'tags', 'primary_tag', 'email']
                     );
 
                     localUtils.API.checkResponse(jsonResponse.meta.pagination, 'pagination');
@@ -340,6 +340,32 @@ describe('Posts API', function () {
                     should.exist(res.body.posts);
                     should.exist(res.body.posts[0].slug);
                     res.body.posts[0].slug.should.equal('this-is-invisible');
+                });
+        });
+
+        it('accepts visibility parameter', function () {
+            return request
+                .get(localUtils.API.getApiQuery(`posts/${testUtils.DataGenerator.Content.posts[0].id}/`))
+                .set('Origin', config.get('url'))
+                .expect(200)
+                .then((res) => {
+                    return request
+                        .put(localUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+                        .set('Origin', config.get('url'))
+                        .send({
+                            posts: [{
+                                visibility: 'members',
+                                updated_at: res.body.posts[0].updated_at
+                            }]
+                        })
+                        .expect('Content-Type', /json/)
+                        .expect('Cache-Control', testUtils.cacheRules.private)
+                        .expect(200);
+                })
+                .then((res) => {
+                    should.exist(res.body.posts);
+                    should.exist(res.body.posts[0].visibility);
+                    res.body.posts[0].visibility.should.equal('members');
                 });
         });
     });
