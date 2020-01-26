@@ -25,17 +25,25 @@ const expectedProperties = {
         .without('visibility')
         .without('locale')
         .without('page')
-        .without('author_id')
+        .without('author_id', 'author')
+        // emails are not supported in API v2
+        .without('send_email_when_published')
         // always returns computed properties
         .concat('url', 'primary_tag', 'primary_author', 'excerpt')
         .concat('authors', 'tags')
+        // returns meta fields from `posts_meta` schema
+        .concat(
+            ..._(schema.posts_meta).keys()
+                .without('post_id', 'id')
+                // emails are not supported in API v2
+                .without('email_subject')
+        )
     ,
     user: _(schema.users)
         .keys()
         .without('visibility')
         .without('password')
         .without('locale')
-        .without('ghost_auth_access_token')
         .without('ghost_auth_id')
         .concat('url')
     ,
@@ -50,7 +58,7 @@ const expectedProperties = {
     subscriber: _(schema.subscribers)
         .keys()
     ,
-    accesstoken: _(schema.accesstokens)
+    member: _(schema.members)
         .keys()
     ,
     role: _(schema.roles)

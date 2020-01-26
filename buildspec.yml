@@ -25,6 +25,3 @@ phases:
 artifacts:
   files:
     - '**/*'
-
-
-  
