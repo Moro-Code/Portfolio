@@ -4,6 +4,3 @@
 [submodule "content/themes/casper"]
 	path = content/themes/casper
 	url = https://github.com/TryGhost/Casper.git
-[submodule "content/themes/TheShell"]
-	path = content/themes/TheShell
-	url = https://github.com/Moro-Code/The-Shell.git
