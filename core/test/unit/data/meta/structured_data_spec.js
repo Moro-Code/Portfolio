@@ -4,8 +4,8 @@ var should = require('should'),
 describe('getStructuredData', function () {
     it('should return structured data from metadata per post', function (done) {
         var metadata = {
-                blog: {
-                    title: 'Blog Title',
+                site: {
+                    title: 'Site Title',
                     facebook: 'testuser',
                     twitter: '@testuser'
                 },
@@ -26,10 +26,10 @@ describe('getStructuredData', function () {
                     url: null
                 },
                 twitterImage: null,
-                ogTitle: '',
-                ogDescription: '',
-                twitterTitle: '',
-                twitterDescription: '',
+                ogTitle: 'Post Title',
+                ogDescription: 'Post meta description',
+                twitterTitle: 'Post Title',
+                twitterDescription: 'Post meta description',
                 authorFacebook: 'testpage',
                 creatorTwitter: '@twitterpage',
                 keywords: ['one', 'two', 'tag'],
@@ -46,7 +46,7 @@ describe('getStructuredData', function () {
             'og:image': 'http://mysite.com/content/image/mypostcoverimage.jpg',
             'og:image:width': 500,
             'og:image:height': 500,
-            'og:site_name': 'Blog Title',
+            'og:site_name': 'Site Title',
             'og:title': 'Post Title',
             'og:type': 'article',
             'og:url': 'http://mysite.com/post/my-post-slug/',
@@ -67,8 +67,8 @@ describe('getStructuredData', function () {
 
     it('should return structured data from metadata with provided og and twitter images only per post', function (done) {
         var metadata = {
-                blog: {
-                    title: 'Blog Title',
+                site: {
+                    title: 'Site Title',
                     facebook: 'testuser',
                     twitter: '@testuser'
                 },
@@ -106,7 +106,7 @@ describe('getStructuredData', function () {
             'og:image': 'http://mysite.com/content/image/mypostogimage.jpg',
             'og:image:width': 20,
             'og:image:height': 100,
-            'og:site_name': 'Blog Title',
+            'og:site_name': 'Site Title',
             'og:title': 'Custom Facebook title',
             'og:type': 'article',
             'og:url': 'http://mysite.com/post/my-post-slug/',
@@ -127,8 +127,8 @@ describe('getStructuredData', function () {
 
     it('should return structured data from metadata with no nulls', function (done) {
         var metadata = {
-                blog: {
-                    title: 'Blog Title',
+                site: {
+                    title: 'Site Title',
                     facebook: '',
                     twitter: ''
                 },
@@ -146,9 +146,9 @@ describe('getStructuredData', function () {
                     url: null
                 },
                 twitterImage: null,
-                ogTitle: null,
+                ogTitle: 'Post Title',
                 ogDescription: null,
-                twitterTitle: null,
+                twitterTitle: 'Post Title',
                 twitterDescription: null,
                 keywords: null,
                 metaDescription: null
@@ -156,7 +156,7 @@ describe('getStructuredData', function () {
 
         should.deepEqual(structuredData, {
             'article:modified_time': '2016-01-21T22:13:05.412Z',
-            'og:site_name': 'Blog Title',
+            'og:site_name': 'Site Title',
             'og:title': 'Post Title',
             'og:type': 'article',
             'og:url': 'http://mysite.com/post/my-post-slug/',
